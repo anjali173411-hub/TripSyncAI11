@@ -8,8 +8,10 @@ import { rateLimit } from "../middleware/rateLimit.js";
 
 const router = express.Router();
 
-const loginLimit = rateLimit({ max: 10, windowMinutes: 15, message: "Too many login attempts." });
-const registerLimit = rateLimit({ max: 5, windowMinutes: 15, message: "Too many sign-ups from this device." });
+// Development allows many attempts so repeated testing does not get blocked.
+const isDev = process.env.NODE_ENV === "development";
+const loginLimit = rateLimit({ max: isDev ? 100 : 10, windowMinutes: 15, message: "Too many login attempts." });
+const registerLimit = rateLimit({ max: 50, windowMinutes: 15, message: "Too many sign-ups from this device." });
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

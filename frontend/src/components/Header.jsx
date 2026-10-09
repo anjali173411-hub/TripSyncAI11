@@ -28,7 +28,7 @@ export default function Header() {
           ) : (
             <>
               <Link to="/trips">My Trips</Link>
-              <Link to="/destinations">Destinations</Link>
+              {/* <Link to="/destinations">Destinations</Link> */}
               <Link to="/profile">Profile</Link>
               <Link to="/trip/new" className="header-create">
                 Plan a Trip

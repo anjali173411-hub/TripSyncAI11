@@ -38,7 +38,7 @@ everyone's wishes:
    contribution, things they must do and things they want to avoid.
 3. The **AI** reads everyone's preferences together and builds one itinerary. It prefers
    activities that several people will enjoy, and shows which members each activity suits
-   (for example, *"Matches: Anjali, Anu"*).
+   (for example, *"Matches: Priya, Rahul"*).
 4. When two people want opposite things, the AI does **not** silently pick a side. It explains
    the clash and suggests compromises, and the **people involved vote**. A majority decides; on a
    tie, the organiser decides.

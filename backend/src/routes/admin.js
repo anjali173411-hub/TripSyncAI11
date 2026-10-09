@@ -37,11 +37,11 @@ router.get("/stats", async (req, res, next) => {
 
     res.json({
       total_users: await count(
-        "SELECT COUNT(*) AS total FROM users"
+        "SELECT COUNT(*) AS total FROM users WHERE role <> 'admin'"
       ),
 
       active_users: await count(
-        "SELECT COUNT(*) AS total FROM users WHERE is_active = TRUE"
+        "SELECT COUNT(*) AS total FROM users WHERE is_active = TRUE AND role <> 'admin'"
       ),
 
       total_trips: await count(
@@ -91,6 +91,7 @@ router.get("/users", async (req, res, next) => {
        FROM users
        LEFT JOIN trip_members ON trip_members.user_id = users.id
        LEFT JOIN trips AS owned ON owned.owner_id = users.id
+       WHERE users.role <> 'admin'
        GROUP BY users.id
        ORDER BY users.created_at DESC, users.id DESC`
     );

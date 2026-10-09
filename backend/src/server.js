@@ -22,7 +22,12 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
+// CORS_ORIGIN may list several origins separated by commas.
+const allowedOrigins = String(process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {

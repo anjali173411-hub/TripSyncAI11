@@ -8,6 +8,20 @@ export function countDays(trip) {
   return Math.round((new Date(trip.end_date) - new Date(trip.start_date)) / oneDay) + 1;
 }
 
+// Every calendar date of the trip, e.g. ["2026-10-14", "2026-10-15", ...].
+export function tripDates(trip) {
+  const dates = [];
+  const start = new Date(`${String(trip.start_date).slice(0, 10)}T00:00:00Z`);
+  for (let i = 0; i < countDays(trip); i++) {
+    const date = new Date(start);
+    date.setUTCDate(start.getUTCDate() + i);
+    dates.push(date.toISOString().slice(0, 10));
+  }
+  return dates;
+}
+
+const MIN_ACTIVITIES_PER_DAY = 3;
+
 function isCost(value) {
   return typeof value === "number" && value >= 0;
 }
@@ -91,6 +105,7 @@ async function askAI(path, body, check) {
 
 export async function generatePlan(trip, members, instructions = "") {
   const days = countDays(trip);
+  const dates = tripDates(trip);
   const keys = members.map((m) => m.key);
   const isGroup = trip.type === "group";
 
@@ -124,7 +139,9 @@ export async function generatePlan(trip, members, instructions = "") {
       return `Expected ${days} days`;
     }
     for (const day of plan.days) {
-      if (!Array.isArray(day.activities) || day.activities.length === 0) return "A day has no activities";
+      if (!Array.isArray(day.activities) || day.activities.length < MIN_ACTIVITIES_PER_DAY) {
+        return `Day ${day.date || "?"} has fewer than ${MIN_ACTIVITIES_PER_DAY} activities`;
+      }
       for (const activity of day.activities) {
         if (!activity.title) return "An activity has no title";
         if (!isCost(activity.estimated_cost)) return "An activity has a bad cost";
@@ -161,7 +178,7 @@ export async function generatePlan(trip, members, instructions = "") {
       cost_breakdown: plan.cost_breakdown,
       days: plan.days.map((day, index) => ({
         day: index + 1,
-        date: day.date,
+        date: dates[index],
         title: day.title,
         activities: day.activities.map((a) => ({
           time: a.time || "",

@@ -31,7 +31,7 @@ cd frontend
 npm install
 npm run dev
 ```
-Open http://localhost:5173. The admin login is admin@planora.com / admin1234.
+Open http://localhost:5173. Log in as admin with the `ADMIN_EMAIL` / `ADMIN_PASSWORD` you set in `backend/.env`.
 
 ## SRS modules
 | Module | Backend | Frontend page |
